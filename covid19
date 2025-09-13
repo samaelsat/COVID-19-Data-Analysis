@@ -1,0 +1,71 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+country_df = pd.read_csv(r'C:\Users\samae\OneDrive\Desktop\my project\archive\country_wise_latest.csv')
+day_wise_df= pd.read_csv(r'C:\Users\samae\OneDrive\Desktop\my project\archive\day_wise.csv')
+worldometer_df = pd.read_csv(r'C:\Users\samae\OneDrive\Desktop\my project\archive\worldometer_data.csv')
+
+# Display the first few rows of each DataFrame
+print(country_df.head())
+print(day_wise_df.head())
+print(worldometer_df.head())
+
+# Display the column names of each DataFrame
+print(country_df.columns)
+print(day_wise_df.columns)
+print(worldometer_df.columns)
+
+# Check for missing values in each DataFrame
+print(country_df.isnull().sum())
+print(day_wise_df.isnull().sum())
+print(worldometer_df.isnull().sum())
+
+# Drop rows with missing values
+clean_country_df = country_df.dropna()
+clean_day_wise_df = day_wise_df.dropna()
+clean_worldometer_df = worldometer_df.dropna()
+
+# Display the shapes of the cleaned DataFrames
+print(clean_country_df.shape)
+print(clean_day_wise_df.shape)
+print(clean_worldometer_df.shape)
+
+#plot cases and death over time
+plt.figure(figsize=(12,6))
+plt.plot(day_wise_df['Date'],day_wise_df['Confirmed'],label='Confirmed Cases')
+plt.plot(day_wise_df['Date'],day_wise_df['Deaths'],label='Deaths')
+plt.xlabel('Date')
+plt.ylabel('Number of Cases')
+plt.title('covid-19 Cases and Deaths Over Time')
+plt.gca().xaxis.set_major_locator(plt.MaxNLocator(10))  # Show only 10 major ticks
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# Top 10 countries by total cases
+top_countries = country_df.sort_values(by='TotalCases', ascending=False).head(10)
+plt.figure(figsize=(12,6))
+plt.xlabel('Countries')
+plt.ylabel('Confirmed Cases')
+plt.title('Top 10 Countries by Total Cases')
+sns.barplot(x='Country',y='Total Cases', data= top_countries)
+plt.show() 
+
+# total population 
+plt.figure(figsize=(12,6))
+plt.xlabel('Countries/Regions')
+plt.ylabel('Population')
+sns.barplot(x='Countries/Regions',y='Population',data = worldometer_df)
+plt.title('Population Analysis by Countries/Regions')
+plt.show()
+
+# population vs total cases graph
+plt.figure(figsize=(12,6))
+plt.scatter(worldometer_df['Population'], worldometer_df['TotalCases'], label='Total Cases', color='orange')
+plt.xlabel('Population')
+plt.ylabel('Total Cases')
+plt.title('Population vs Total Cases')
+plt.legend()
+plt.show()
